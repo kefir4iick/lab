@@ -123,6 +123,16 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
   retention_in_days = 7
 }
 
+resource "null_resource" "package_lambda" {
+  triggers = {
+    always_run = timestamp()
+  }
+  
+  provisioner "local-exec" {
+    command = "zip -r lambda_function.zip lambda_function.py"
+  }
+}
+
 resource "aws_lambda_function" "s3_copy_lambda" {
   filename      = "lambda_function.zip"
   function_name = "s3_copy_function"
@@ -141,7 +151,8 @@ resource "aws_lambda_function" "s3_copy_lambda" {
 
   depends_on = [
     aws_iam_role_policy.lambda_s3_policy,
-    aws_iam_role_policy.lambda_logs_policy
+    aws_iam_role_policy.lambda_logs_policy,
+    null_resource.package_lambda
   ]
 }
 
