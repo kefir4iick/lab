@@ -8,11 +8,11 @@ import json
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-HOST_IP = "172.17.0.2"
+ENDPOINT_URL = os.getenv('ENDPOINT_URL', 'http://localhost:4566')
 
 s3 = boto3.client(
     's3',
-    endpoint_url=f'http://{HOST_IP}:4566',
+    endpoint_url=ENDPOINT_URL,
     region_name='us-east-1',
     aws_access_key_id='test',
     aws_secret_access_key='test',
